@@ -1,21 +1,42 @@
 class AttractionController < ApplicationController
 
-  before_action :set_attraction, only: [:show, :new, :edit]
+  before_action :set_attraction, only: [:show, :edit, :update, :destroy]
 
   def index
     @attractions = Attraction.all
   end
 
   def show
-
+    @ride = Ride.new
   end
 
   def new
+    @attraction = Attraction.new
+  end
 
+  def create
+    @attraction = Attraction.new(attraction_params)
+    if @attraction.save
+      redirect_to attraction_path(@attraction)
+    else
+      render :new
+    end
   end
 
   def edit
+  end
 
+  def update
+    if @attraction.update(attraction_params)
+      redirect_to attraction_path(attraction)
+    else
+      render :edit
+    end
+  end
+
+  def destroy
+    @attraction.destroy
+    :notice 'Attraction was sucessfully destroyed'
   end
 
 private
