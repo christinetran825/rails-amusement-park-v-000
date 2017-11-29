@@ -2,22 +2,22 @@ class SessionsController < ApplicationController
 
   def new
     @user = User.new
-    @users = User.all
   end
 
   def create
-    @user = User.find(name: params[:user][:name])
+    @user = User.find_by(name: params[:user][:name])
     if @user && @user.authenticate(params[:user][:password])
       session[:user_id] = @user.id
-      redirect_to user_path(@user), notice: "Welcome back to the theme park!"
+      redirect_to user_path(@user)
     else
-      redirect_to signin_path
+      flash[:alert] = @user.errors.full_messages.join(", ")
+      render :new
     end
   end
 
   def destroy
-    session[:user_id] = nil
-    redirect_to root_url
+    session.clear
+    redirect_to root_path
   end
 
 

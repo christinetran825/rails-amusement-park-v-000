@@ -1,12 +1,6 @@
 <h1>Listing attractions</h1>
 
 <table>
-  <thead>
-    <tr>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
   <tbody>
     <tr>
       <td><strong>Picture</strong></td>
@@ -14,24 +8,19 @@
       <td><strong>Tickets</strong></td>
       <td><strong>Details</strong></td>
     </tr>
-    <% @attractions.each do |attraction| %>
-      <tr>
-        <td><img src="http://<%= attraction.name.gsub(" ", "") %>.jpg.to/" width="100"></td>
-        <td> <%= attraction.name %> </td>
-        <td> <%= attraction.tickets %> </td>
-        <% if current_user.admin %>
-          <td> <%= link_to "Show #{attraction.name}", attraction_path(attraction) %> </td>
-        <% else %>
-          <td> <%= link_to "Go on #{attraction.name}", attraction_path(attraction) %> </td>
-        <% end %>
-      </tr>
+    <% @attractions.each do |att| %>
+    <tr>
+      <td><img src="http://www.allthingsclipart.com/05/amusement.park.05.jpg" width="100"></td>
+      <td> <%= att.name %> </td>
+      <td> <%= att.tickets %> </td>
+      <% if current_user.admin %>
+        <td> <%= link_to "Show " + att.name, attraction_path(att) %> </td>
+      <% else %>
+        <td> <%= link_to "Go on " + att.name, attraction_path(att) %> </td>
+      <% end %>
+    </tr>
     <% end %>
   </tbody>
-
 </table>
-
-<% if user %>
-  <p> <%= link_to "Back to profile", user_path(@user), {:class => "btn btn-primary"} %> </p>
-<% else %>
-  <p> <%= link_to "New Attraction", new_attraction_path %> </p>
-<% end %>
+<br>
+<p> <%= link_to "New Attraction", new_attraction_path %> </p>

@@ -1,10 +1,4 @@
-class UserController < ApplicationController
-
-  before_action :require_login, only: [:show]
-
-  def show
-    @user = User.find(id: params[:id])
-  end
+class UsersController < ApplicationController
 
   def new
     @user = User.new
@@ -12,12 +6,18 @@ class UserController < ApplicationController
 
   def create
     @user = User.new(user_params)
-    if @user.save
+    if @user && @user.save
       session[:user_id] = @user.id
       redirect_to user_path(@user)
     else
-      render :new
+      flash[:alert] = user.errors.full_messages.join(", ")
+      render 'users/new'
     end
+  end
+
+  def show
+    redirect_to root_path unless session[:user_id]
+    @user = User.find_by(id: params[:id])
   end
 
   private

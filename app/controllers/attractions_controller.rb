@@ -1,6 +1,7 @@
-class AttractionController < ApplicationController
+class AttractionsController < ApplicationController
 
   before_action :set_attraction, only: [:show, :edit, :update, :destroy]
+  before_action :require_admin, only: [:new, :create, :edit, :destroy]
 
   def index
     @attractions = Attraction.all
@@ -19,6 +20,7 @@ class AttractionController < ApplicationController
     if @attraction.save
       redirect_to attraction_path(@attraction)
     else
+      flash[:alert] = user.errors.full_messages.join(", ")
       render :new
     end
   end
@@ -27,22 +29,25 @@ class AttractionController < ApplicationController
   end
 
   def update
-    if @attraction.update(attraction_params)
-      redirect_to attraction_path(attraction)
+    if @attraction && @attraction.update(attraction_params)
+      redirect_to attraction_path(@attraction)
     else
+      flash[:alert] = user.errors.full_messages.join(", ")
       render :edit
     end
   end
 
   def destroy
-    @attraction.destroy
-    :notice 'Attraction was sucessfully destroyed'
   end
 
 private
 
   def set_attraction
     @attraction = Attraction.find(params[:id])
+  end
+
+  def require_admin
+    redirect_to attraction_path(@attraction) unless current_user.admin
   end
 
   def attraction_params
